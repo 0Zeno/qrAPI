@@ -15,10 +15,3 @@ func GenerateQR(url string, size int) ([]byte){
 	}
 	return image
 }
-
-func GenerateQR2(url string, size int) {
-	err = qrcode.WriteFile(url, qrcode.Medium, size,"file.png")
-	if err != nil {
-		fmt.Println("Somthing went wrong generating the QR code")
-	}
-}
