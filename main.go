@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"os"
 	qrCodeGenerator "qrAPI/generator"
 	"strconv"
 
@@ -40,12 +39,8 @@ func getResonse(c *gin.Context){
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
 	router := gin.Default()
 	router.GET("/", getResonse)
-	router.Run(""+port)
+	router.Run()
 }
 
