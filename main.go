@@ -2,38 +2,27 @@ package main
 
 import (
 	"net/http"
-	qrCodeGenerator "qrAPI/generator"
-	"strconv"
+
+	qrcode "github.com/skip2/go-qrcode"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Input struct {
 	Url string `form:"url"`
-	Size string `form:"size"`
-}
-
-func convertToInt(size string) int {
-	i, err := strconv.Atoi(size)
-	if err != nil {
-		panic(err)
-	}
-
-	if i < 256 {
-		i = 256
-	}
-
-	if i > 1024 {
-		i = 1024
-	}
-	
-	return i;
+	Size int `form:"size"`
 }
 
 func getResonse(c *gin.Context){
 	var input Input
 	if c.ShouldBind(&input) == nil {
-		c.IndentedJSON(http.StatusOK, qrCodeGenerator.GenerateQR(input.Url, convertToInt(input.Size)))
+		qrCode, err := qrcode.Encode(input.Url, qrcode.Medium, input.Size)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		//c.Header("Content-Type", "image/png")
+		c.JSON(http.StatusOK, qrCode)
 
 	}
 }
