@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	qrcode "github.com/skip2/go-qrcode"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	qrcode "github.com/skip2/go-qrcode"
 )
 
 type Input struct {
@@ -29,6 +29,10 @@ func getResonse(c *gin.Context){
 
 func main() {
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"PUT", "GET", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+	}))
 	router.GET("/", getResonse)
 	router.Run()
 }
